@@ -3,22 +3,22 @@ package react
 import (
     "dagger.io/dagger"
     
-    "universe.dagger.io/x/solomon@dagger.io/yarn"
+    "universe.dagger.io/yarn"
 )
 
 // Run yarn test to exceute the react project unit tests.
 #Build: {
-    // The project source code.
+    // Project source code.
     source: dagger.#FS
 
     // Project name, used for cache scoping
 	project: string | *"default"
-    
-    // Other actions required to run before this one
-    requires: [...string]
 
-    yarn.#Run & {
-        "source": source
-        args:     ["install"]
+    // React static bundle.
+    output: container.output
+
+    container: yarn.#Build & {
+        "source":  source
+        "project": project
     }
 }

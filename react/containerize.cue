@@ -9,22 +9,22 @@ import (
 
 // Build the application container.
 #Containerize: {
-    // The project source code.
+    // Project source code.
     source: dagger.#FS
 
-    // The image tag.
+    // Image tag.
     tag: string
 
-    // The directory with the docker build dependencies.
-    depsDir: string | *".trustacks"
+    // Docker build assets.
+    assets: string | *".trustacks"
 
-    // The project build static assets.
+    // Project build static assets.
     build: dagger.#FS
 
-    // The container image.
+    // Container image.
     image: container.output
 
-    // The container filesystem.
+    // Container filesystem.
     output: _export.output
 
     container: docker.#Build & {
@@ -43,13 +43,13 @@ import (
                 contents: build
             },
             docker.#Copy & {
-                "source": "\(depsDir)/nginx.conf"
-                dest:     "/etc/nginx/nginx.conf"
+                "source": "\(assets)/nginx.conf"
+                dest:     "/etc/nginx/conf.d/app.conf"
                 contents: source
             },
             docker.#Set & {
                 config: {
-                    cmd: ["nginx", "-g", "'daemon off;'"]
+                    cmd: ["/bin/sh", "-c", "nginx -g 'daemon off;'"]
                 }
             }
         ]

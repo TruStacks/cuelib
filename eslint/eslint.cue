@@ -2,13 +2,13 @@ package eslint
 
 import (
     "encoding/json"
-    "strings"
 
     "dagger.io/dagger"
     "dagger.io/dagger/core"
 
     "universe.dagger.io/bash"
     "universe.dagger.io/docker"
+    "universe.dagger.io/yarn"
 )
 
 // Run the eslint utility.
@@ -21,9 +21,6 @@ import (
 
     // Use this config if an eslintrc is not present in the source.
     defaultConfig: _ | *{}
-
-    // Other actions required to run before this one
-    requires: [...string]
 
     // The command return code.
 	code: container.export.files."/code"
@@ -48,7 +45,6 @@ import (
 
         env: {
             ESLINTRC: json.Marshal(defaultConfig)
-            REQUIRES: strings.Join(requires, "_")
         }
 
         mounts: {
@@ -69,6 +65,16 @@ import (
 					id: "\(project)-nodejs"
 				}
 			}
+            "installOutput": {
+                contents: install.output
+                dest:     "/tmp/yarn_install_output"
+            }
         }
     }
+    
+    install: yarn.#Install & {
+        "source":  source
+        "project": project
+    }
+
 }

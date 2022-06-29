@@ -3,7 +3,7 @@ package react
 import (
     "dagger.io/dagger"
 
-    "universe.dagger.io/x/solomon@dagger.io/yarn"
+    "universe.dagger.io/yarn"
 )
 
 // Run yarn test to exceute the react project unit tests.
@@ -13,14 +13,10 @@ import (
         
     // Project name, used for cache scoping.
 	project: string | *"default"
-
-    // Other actions required to run before this one.
-    requires: [...string]
     
-    yarn.#Run & {
+    yarn.#Script & {
         "source":   source
-        project:    project
-        args:       ["test"]
-        "requires": requires
+        "project":  project
+        name:       "test"
     }
 }
