@@ -9,14 +9,11 @@ import (
 
 // Build the application container.
 #Containerize: {
-    // Project source code.
-    source: dagger.#FS
-
     // Image tag.
     tag: string
 
     // Docker build assets.
-    assets: string | *".trustacks"
+    assets: dagger.#FS
 
     // Project build static assets.
     build: dagger.#FS
@@ -43,9 +40,9 @@ import (
                 contents: build
             },
             docker.#Copy & {
-                "source": "\(assets)/nginx.conf"
+                "source": "nginx.conf"
                 dest:     "/etc/nginx/conf.d/app.conf"
-                contents: source
+                contents: assets
             },
             docker.#Set & {
                 config: {
