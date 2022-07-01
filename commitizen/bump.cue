@@ -11,20 +11,26 @@ import (
 
 // Bump to the next semantic release version and commit to the tag.
 #Bump: {
-    // The project source code.
+    // Project source code.
     source: dagger.#FS
 
-    // The version bump commit message.
+    // Bump commit message.
     message: string | *"build: bump $current_version → $new_version [@skip-ci]"
 
-    // Additional files to include in the version bump commit.
-    include: [string] | *[]
+    // Commit username.
+    gitUsername: string | *"trustacks"
 
-    // The command return code.
+    // Commit email.
+    gitEmail: string | *"ci@trustacks.io"
+
+    // Amend files to commit before bump.
+    amend: [string] | *[]
+
+    // Command return code.
     code: container.export.files."/code"
 
-    // The version bumped source.
-    output: container.export.directories."/_src"
+    // Version bumped source.
+    output: container.export.directories."/output"
 
     container: bash.#Run & {
         _image:  #Image
@@ -33,6 +39,8 @@ import (
 
         script: contents: #"""
         set -x
+
+        # check if latest tag exists.
         latest_tag=$(git describe --tag `git rev-list --tags --max-count=1` || true)
         if [ ! -z "$latest_tag" ]; then
             git checkout tags/$latest_tag -- CHANGELOG.md
@@ -50,28 +58,36 @@ import (
         }
         EOF
         fi
-        cz bump --yes
-        git add $INCLUDE_FILES
+
+        git config user.name "$GIT_USERNAME"
+        git config user.email "$GIT_EMAIL"
+        
+        # bump version and amend with included files.
+        git add $AMEND_FILES
         git commit --amend --no-edit
-        git tag -f $(cz version -p)
+        cz bump --yes
+        
+        cp -R /src /output
         echo $$ > /code
-        cat .cz.json
-        cp -R /src /_src
         """#
 
-        "mounts": src: {
-            dest:     "/src"
-            contents: source
+        mounts: {
+            src: {
+                dest:     "/src"
+                contents: source
+            }
         }
 
         env: {
-            INCLUDE_FILES: strings.Join(include, " ")
-            BUMP_MESSAGE:  message
+            AMEND_FILES:  strings.Join(amend, " ")
+            BUMP_MESSAGE: message
+            GIT_USERNAME: gitUsername
+            GIT_EMAIL:    gitEmail
         }
 
         export: {
-            directories: "/_src": _
-            files:       "/code": string
+            directories: "/output": dagger.#FS
+            files:       "/code":   string
         }
     }
 }

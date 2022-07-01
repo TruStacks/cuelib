@@ -29,7 +29,7 @@ _#DefaultVersion: "8.5"
             docker.#Run & {
                 command: {
                     name: "microdnf"
-                    args: ["install", "nodejs", "gzip", "jq", "tar"]
+                    args: ["install", "nodejs", "git", "gzip", "jq", "tar"]
                 }
             },
             docker.#Run & {

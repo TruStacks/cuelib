@@ -40,7 +40,7 @@ import (
                 contents: build
             },
             docker.#Copy & {
-                "source": "nginx.conf"
+                "source": "/nginx.conf"
                 dest:     "/etc/nginx/conf.d/app.conf"
                 contents: assets
             },

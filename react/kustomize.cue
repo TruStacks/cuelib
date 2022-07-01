@@ -10,17 +10,17 @@ import (
 
 // Prepare the kustomize assets for deployment. 
 #Kustomize: {
-    // The project source code.
+    // Project source code.
     source: dagger.#FS
+
+    // Build assets
+    assets: dagger.#FS
 
     // Image ref is the.
     imageRef: string
 
     // registrySecret is used to the pull the application image.
     registrySecret: string
-
-    // The directory with the kustomize assets.
-    depsDir: string | *".trustacks"
 
     // Other actions required to run before this one.
     requires: [...string]
@@ -38,15 +38,18 @@ import (
 
         script: contents: #"""
         set -x
-        echo "$REGISTRY_SECRET" > "$DEPS_DIR"/kustomize/base/registry-secret.yaml
-        cd "$DEPS_DIR"/kustomize/base && kustomize edit set image webserver="$IMAGE_REF"
+        echo "$REGISTRY_SECRET" > /assets/kustomize/base/registry-secret.yaml
+        cd /assets/kustomize/base && kustomize edit set image webserver="$IMAGE_REF"
+        
+        mkdir -p /src/.trustacks
+        cp -R /assets /src/.trustacks/kustomize
         cp -R /src /output
+        
         echo $$ > /code
         """#
 
         env: {
             REQUIRES:        strings.Join(requires, "_")
-            DEPS_DIR:        depsDir
             IMAGE_REF:       imageRef
             REGISTRY_SECRET: registrySecret
         }
@@ -60,6 +63,10 @@ import (
             "src": {
                 dest:     "/src"
                 contents: source
+            }
+            "assets": {
+                dest:     "/assets"
+                contents: assets
             }
         }
     }
