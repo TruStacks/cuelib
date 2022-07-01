@@ -8,14 +8,14 @@ import (
 )
 
 #Encrypt: {
-    // The source contents to encrypt.
+    // Source containg the file to encrypt.
     source: dagger.#FS
 
-    // The path to the file to encrypt
+    // File to encrypt.
     path: string
 
-    // The age key used to encrypt the file.
-    ageKey: dagger.#Secret
+    // Encryption key.
+    key: string
 
     // Encrypted regex for the sops encrypt command.
     regex: string | *".*"
@@ -23,7 +23,7 @@ import (
     // Configuration exit code.
     code: container.export.files."/code"
 
-    // The encrypted sops file.
+    // Encrypted file.
     output: container.export.files."/output"
 
     // Run `cz bump` and write the version file.
@@ -34,7 +34,7 @@ import (
 
         script: contents: #"""
         set -x
-        sops -e --age $AGE_KEY --encrypted-regex $ENCRYPTED_REGEX $FILE_PATH > /output
+        sops -e --age $KEY --encrypted-regex $ENCRYPTED_REGEX $FILE_PATH > /output
         echo $$ > /code
         """#
 
@@ -46,7 +46,7 @@ import (
         }
 
         env: {
-            AGE_KEY:         ageKey
+            KEY:             key
             FILE_PATH:       path
             ENCRYPTED_REGEX: regex
         }
