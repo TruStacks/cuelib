@@ -11,16 +11,19 @@ import (
 
 // Create a kubernetes container registry secret.
 #DockerRegistry: {
-    // The secret name.
+    // Secret name.
     name: string
 
-    // The container registry server.
+    // Secret namespace.
+    namespace: string
+
+    // Container registry server.
     server: string
 
-    // The container registry username.
+    // Container registry username.
     username: string
 
-    // The container registry password.
+    // Container registry password.
     password: dagger.#Secret
 
     // Run the command in dry-run mode.
@@ -49,6 +52,7 @@ import (
             --docker-username=$USERNAME \
             --docker-password=$PASSWORD \
             -o yaml \
+            -n $NAMESPACE \
         | tee /output/secret.yaml
         echo $$ > /code
         """#
@@ -59,12 +63,13 @@ import (
         }
 
         env: {
-            DRY_RUN:  dryRun
-            NAME:     name
-            SERVER:   server
-            USERNAME: username
-            PASSWORD: password
-            REQUIRES: strings.Join(requires, "_")
+            DRY_RUN:   dryRun
+            NAME:      name
+            NAMESPACE: namespace
+            SERVER:    server
+            USERNAME:  username
+            PASSWORD:  password
+            REQUIRES:  strings.Join(requires, "_")
         }
     }
 }
