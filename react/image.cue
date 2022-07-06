@@ -44,9 +44,11 @@ _#DefaultVersion: "8.5"
                     name:  "/bin/sh"
                     args:  [
                         #"""
-                        curl -s https://raw.githubusercontent.com/kubernetes-sigs/kustomize/master/hack/install_kustomize.sh  | bash && \
-                        install ./kustomize /usr/local/bin/kustomize && \
+                        curl -s https://raw.githubusercontent.com/kubernetes-sigs/kustomize/master/hack/install_kustomize.sh  | bash
+                        install ./kustomize /usr/local/bin/kustomize
                         rm ./kustomize
+
+                        curl https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3 | bash
                         """#
                     ]
                     flags: "-c": true

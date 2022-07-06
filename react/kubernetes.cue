@@ -1,6 +1,7 @@
 package react
 
 import (
+    "encoding/yaml"
     "strings"
 
     "dagger.io/dagger"
@@ -15,6 +16,8 @@ import (
 
     // Build assets
     assets: dagger.#FS
+
+    values: _
 
     // Image ref is the.
     imageRef: string
@@ -37,12 +40,29 @@ import (
         workdir: "/src"
 
         script: contents: #"""
-        set -x
+        # render helm templates
+        mkdir /tmp/helm
+        cp -R /assets/templates /tmp/helm/templates
+        
+        cat > /tmp/helm/Chart.yaml <<EOF
+        apiVersion: v1
+        name: templates
+        version: 0
+        EOF
+
+        echo "$VALUES" > /tmp/values.yaml
+        helm template -f /tmp/values.yaml /tmp/helm --output-dir /tmp/output
+        cp /tmp/output/templates/templates/* /assets/kustomize/base
+
+        for template in $(ls /tmp/output/templates/templates/); do
+            echo "- $template"  >> /assets/kustomize/base/kustomization.yaml
+        done
+
+        # create registry pull secret
         echo "$REGISTRY_SECRET" > /assets/kustomize/base/registry-secret.yaml
-        cd /assets/kustomize/base && kustomize edit set image webserver="$IMAGE_REF"
         
         mkdir -p /src/.trustacks
-        cp -R /assets /src/.trustacks/kustomize
+        cp -R /assets/kustomize /src/.trustacks/kustomize
         cp -R /src /output
         
         echo $$ > /code
@@ -52,6 +72,7 @@ import (
             REQUIRES:        strings.Join(requires, "_")
             IMAGE_REF:       imageRef
             REGISTRY_SECRET: registrySecret
+            VALUES:          yaml.Marshal(values)
         }
 
         export: {
