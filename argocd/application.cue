@@ -9,28 +9,40 @@ import (
 )
 
 #Create: {
+    // Argo CD server.
     server: string
     
+    // Auth username.
     username: string
 
+    // Auth password.
     password: dagger.#Secret
 
+    // Project name.
     project: string
 
+    // Git repository url.
     repo: string
 
+    // Path to the kustomize deployment assets.
     path: string | *".trustacks/kustomize"
 
+    // Kustomize overlay name.
     overlay: string
 
+    // Git source private key.
     privateKey: dagger.#Secret
 
+    // Git revision name.
     revision: string
 
+    // Destionation kubenretes cluster.
     destination: string | *"https://kubernetes.default.svc"
 
+    // ALlow insecure tls.
     insecure: string | *"false"
 
+    // Argo CD CLI extra arguments.
     args: [...string]
 
     login: #Login & {

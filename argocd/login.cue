@@ -7,14 +7,19 @@ import (
 )
 
 #Login: {
+    // Argo CD Server.
     server: string
 
+    // Auth username.
     username: string
 
+    // Auth password.
     password: dagger.#Secret
 
+    // ALlow insecure tls.
     insecure: string | *"false"
     
+    // Authenticated Argo CD context.
     output: container.export.directories."/output"
 
     container: bash.#Run & {

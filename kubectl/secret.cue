@@ -35,7 +35,7 @@ import (
     // command exit code.
 	code: container.export.files."/code"
 
-    // The kubernetes docker registry secret.
+    // Kubernetes docker registry secret.
     output: container.export.directories."/output"
 
     container: bash.#Run & {

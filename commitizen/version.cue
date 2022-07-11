@@ -10,13 +10,13 @@ import (
 // Bump to the next semantic release version without committing to 
 // the remote git repository.
 #Version: {
-    // The project source code.
+    // Project source code.
     source: dagger.#FS
 
-    // The command return code.
+    // Command return code.
     code: container.export.files."/code"
 
-    // The version bumped source.
+    // Version bumped source.
     output: container.export.files."/version"
     
     container: bash.#Run & {

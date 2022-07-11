@@ -9,9 +9,10 @@ import (
 
 // Run the shiftleft security scanner.
 #Scan: {
-    // The project source code.
+    // Project source code.
     source: dagger.#FS
 
+    // Shiftleft scan report.
     output: container.export.directories."/output"
 
     // Run the yarn install command.

@@ -14,8 +14,8 @@ import (
     // Remote git repository.
     remote: string
 
-    // Secret mounts.
-    secrets: dagger.#FS
+    // source private key.
+    privateKey: dagger.#Secret
 
     // Version tag.
     version: string
@@ -31,7 +31,7 @@ import (
         
         script: contents: #"""
         mkdir ~/.ssh
-        cp /secrets/source-private-key ~/.ssh/id_rsa
+        echo -e "$PRIVATE_KEY" > ~/.ssh/id_rsa
         chmod 600 ~/.ssh/id_rsa
         git remote set-url origin $REMOTE
         GIT_SSH_COMMAND='ssh -o StrictHostKeyChecking=no' git push --tags
@@ -40,16 +40,15 @@ import (
         echo $$ > /code
         """#
 
-        env: REMOTE: remote
+        env: {
+            REMOTE:      remote
+            PRIVATE_KEY: privateKey
+        }
 
         mounts: {
             "src": {
                 dest:     "/src"
                 contents: source
-            }
-            "secrets": {
-                dest:     "/secrets"
-                contents: secrets
             }
         }
 

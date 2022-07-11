@@ -11,21 +11,26 @@ import (
 
 // Push the image to the docker registry.
 #Publish: {
-    // The container image to publish.
+    // Container image to publish.
     image: docker.#Image
 
-    // The image tag.
+    // Source input.
+    input: dagger.#FS
+
+    // Image tag.
     ref: string
 
-    // The container registry username
+    // Container registry username
     username: string
 
-    // The container registry password.
+    // Container registry password.
     password: dagger.#Secret
 
     // Other actions required to run before this one.
     requires: [...string]
     
+    output: container.export.directories."/output"
+
     // Registry authentication
 	auth?: {
 		"username": username
@@ -33,16 +38,35 @@ import (
 	}
     
     // Hack for requirements ordering
-    bash.#Run & {
+    container: bash.#Run & {
         _image:  #Image
-        input:   _image.output
+        "input": _image.output
         workdir: "/src"
-        script: contents: ""
-        env: REQUIRES: strings.Join(requires, "_")
+        script: contents: #"""
+        cp -R /src /output
+        echo "$REF" > /ref
+        """#
+        
+        env: {
+            REQUIRES: strings.Join(requires, "_")
+            REF: ref 
+        }
+
+        mounts: {
+            "src": {
+                dest:     "/src"
+                contents: input
+            }
+        }
+
+        export: {
+            files:       "/ref": string
+            directories: "/output": dagger.#FS
+        }
     }
 
     docker.#Push & {
-        dest:    ref
+        dest:    strings.TrimSpace(container.export.files."/ref")
         "auth":  auth
         "image": image
     }

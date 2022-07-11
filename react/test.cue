@@ -8,13 +8,16 @@ import (
 
 // Run yarn test to exceute the react project unit tests.
 #Test: {
-    // The project source code.
+    // Project source code.
     source: dagger.#FS
         
     // Project name, used for cache scoping.
 	project: string | *"default"
     
-    yarn.#Script & {
+    // Command return code.
+    code: container.container.export.files."/code"
+
+    container: yarn.#Script & {
         "source":   source
         "project":  project
         name:       "test"

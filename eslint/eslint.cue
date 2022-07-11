@@ -22,7 +22,7 @@ import (
     // Use this config if an eslintrc is not present in the source.
     defaultConfig: _ | *{}
 
-    // The command return code.
+    // Command return code.
 	code: container.export.files."/code"
 
     container: bash.#Run & {
@@ -37,15 +37,9 @@ import (
         echo $$ > /code
         """#
 
-        export: {
-            files: {
-                "/code": string
-            }
-        }
+        export: files: "/code": string
 
-        env: {
-            ESLINTRC: json.Marshal(defaultConfig)
-        }
+        env: ESLINTRC: json.Marshal(defaultConfig)
 
         mounts: {
             "src": {
@@ -76,5 +70,4 @@ import (
         "source":  source
         "project": project
     }
-
 }

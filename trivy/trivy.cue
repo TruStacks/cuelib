@@ -14,6 +14,7 @@ import (
     // Configuration exit code.
     code: container.export.files."/code"
 
+    // Trivy scan report.
     output: container.export.directories."/output"
 
     // Run `cz bump` and write the version file.

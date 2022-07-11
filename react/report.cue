@@ -16,10 +16,10 @@ import (
     // Other actions required to run before this onew
     requires: [...string]
 
-    // The command return code.
+    // Command return code.
     code: container.export.files."/code"
 
-    // The reports bundle.
+    // Reports bundle.
     output: container.export.directories."/output"
 
     container: bash.#Run & {

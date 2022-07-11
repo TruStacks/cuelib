@@ -11,16 +11,14 @@ import (
 
 // Prepare the kustomize assets for deployment. 
 #Kustomize: {
-    // Project source code.
-    source: dagger.#FS
+    // Source input.
+    input: dagger.#FS
 
     // Build assets
     assets: dagger.#FS
 
+    // Helm template values.
     values: _
-
-    // Image ref is the.
-    imageRef: string
 
     // registrySecret is used to the pull the application image.
     registrySecret: string
@@ -28,15 +26,15 @@ import (
     // Other actions required to run before this one.
     requires: [...string]
     
-    // The command return code.
+    // Command return code.
 	code: container.export.files."/code"
 
-    // The tagged source.
+    // Tagged source.
     output: container.export.directories."/output"
     
     container: bash.#Run & {
         _image:  #Image
-        input:   _image.output
+        "input": _image.output
         workdir: "/src"
 
         script: contents: #"""
@@ -70,7 +68,6 @@ import (
 
         env: {
             REQUIRES:        strings.Join(requires, "_")
-            IMAGE_REF:       imageRef
             REGISTRY_SECRET: registrySecret
             VALUES:          yaml.Marshal(values)
         }
@@ -83,7 +80,7 @@ import (
         mounts: {
             "src": {
                 dest:     "/src"
-                contents: source
+                contents: input
             }
             "assets": {
                 dest:     "/assets"

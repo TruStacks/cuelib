@@ -33,6 +33,7 @@ import (
         flux create source git $PROJECT \
             --url=$URL \
             --tag=$TAG \
+            --kubeconfig ./kubeconfig \
             --private-key-file=./private.key \
             --fetch-timeout 30s \
             --silent \
