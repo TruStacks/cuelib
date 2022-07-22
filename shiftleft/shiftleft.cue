@@ -12,6 +12,9 @@ import (
     // Project source code.
     source: dagger.#FS
 
+    // Command exit code.
+    code: container.export.files."/code"
+
     // Shiftleft scan report.
     output: container.export.directories."/output"
 

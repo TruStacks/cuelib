@@ -29,6 +29,7 @@ import (
     // Other actions required to run before this one.
     requires: [...string]
     
+    // Export input source for execution order control.
     output: container.export.directories."/output"
 
     // Registry authentication
