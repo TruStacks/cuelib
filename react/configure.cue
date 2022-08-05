@@ -14,6 +14,12 @@ import (
 
     // Project name, used for cache scoping
 	project: string | *"default"
+    
+    // Remote git repository.
+    remote: string
+
+    // source private key.
+    privateKey: dagger.#Secret
 
     // Configuration exit code.
 	code: container.export.files."/code"
@@ -27,7 +33,15 @@ import (
         workdir: "/src"
 
         script: contents: #"""
+        # fetch the source tags
+        mkdir ~/.ssh
+        echo -e "$PRIVATE_KEY" > ~/.ssh/id_rsa
         set -x
+        
+        chmod 600 ~/.ssh/id_rsa
+        git remote set-url origin $REMOTE
+        GIT_SSH_COMMAND='ssh -o StrictHostKeyChecking=no' git fetch --tags
+
         filters=(
             '.scripts["test"]="CI=true react-scripts test --testResultsProcessor=./node_modules/jest-html-reporter --coverage"'
             '.scripts["build"]="react-scripts build"'
