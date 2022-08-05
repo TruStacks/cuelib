@@ -61,6 +61,11 @@ import (
             directories: "/_src": dagger.#FS
             files:       "/code": string
         }
+        
+        env: {
+            PRIVATE_KEY: privateKey
+            REMOTE:      remote
+        }
 
         mounts: {
             "src": {
