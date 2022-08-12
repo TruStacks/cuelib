@@ -26,6 +26,7 @@ import (
 
         script: contents: #"""
         set -x
+        
         latest_tag=$(git describe --tag `git rev-list --tags --max-count=1` || true)
         if [ ! -z "$latest_tag" ]; then
             git checkout tags/$latest_tag -- CHANGELOG.md

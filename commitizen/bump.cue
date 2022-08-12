@@ -24,7 +24,7 @@ import (
     gitEmail: string | *"ci@trustacks.io"
 
     // Amend files to commit before bump.
-    amend: [string] | *[]
+    amend: [...string] | *[]
 
     // Command return code.
     code: container.export.files."/code"
@@ -63,6 +63,7 @@ import (
         git config user.email "$GIT_EMAIL"
         
         # bump version and amend with included files.
+        git add .cz.json
         git add $AMEND_FILES
         git commit --amend --no-edit
         cz bump --yes

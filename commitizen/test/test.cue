@@ -13,14 +13,33 @@ dagger.#Plan & {
         "./data/src-existing-tags": read: contents: dagger.#FS
     }
 	actions: test: {
-        // Test: get the version for a project with existing tags.
-        withTags: {
-            version: commitizen.#Bump & {
+		// Test: get the version for a project with existing tags.
+        versionWithTags: {
+            version: commitizen.#Version & {
 				source: client.filesystem."./data/src-existing-tags".read.contents
 			}
 
+			assert: versionWithTags.version.output & "1.0.0"
+        }
+        
+        // Test: get the version for a project with no existing tags.
+		versionWithoutTags: {
+			version: commitizen.#Version & {
+				source: client.filesystem."./data/src-no-tags".read.contents
+			}
+
+			assert: versionWithoutTags.version.output & "0.1.0"
+		}
+
+        // Test: bump the version for a project with existing tags.
+        bumpWithTags: {
+            version: commitizen.#Bump & {
+				source: client.filesystem."./data/src-existing-tags".read.contents
+				amend: ["amend1", "amend2"]
+			}
+
 			verify: #AssertFile & {
-				input:    withTags.version.output 
+				input:    bumpWithTags.version.output 
 				path:     ".cz.json"
 				contents: #"""
 				{
@@ -35,15 +54,15 @@ dagger.#Plan & {
 				"""#
 			}
         }
-        // Test: get the version for a project with no existing tags.
-		withoutTags: {
+        // Test: bump the version for a project with no existing tags.
+		bumpWithoutTags: {
             version: commitizen.#Bump & {
 				source:  client.filesystem."./data/src-no-tags".read.contents
 				message: "bump message"
 			}
 
 			verify: #AssertFile & {
-				input:    withoutTags.version.output 
+				input:    bumpWithoutTags.version.output 
 				path:     ".cz.json"
 				contents: #"""
 				{

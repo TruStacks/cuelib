@@ -4,10 +4,8 @@ setup() {
     common_setup
 }
 
-@test "commitizen version" {
-    dagger "do" -p ./version.cue test
-}
-
-@test "commitizen bump" {
-    dagger "do" -p ./bump.cue test
+@test "commitizen" {
+    tar xf data/src-existing-tags.tar -C data
+    tar xf data/src-no-tags.tar -C data
+    dagger "do" -p ./test.cue test
 }

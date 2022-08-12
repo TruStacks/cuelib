@@ -21,14 +21,7 @@ RUN curl -Lo /tmp/node.tar.xz https://nodejs.org/dist/v16.15.1/node-v16.15.1-lin
 ENV PATH=$PATH:/opt/node/bin
 
 # install bats
-RUN curl -Lo /tmp/bats.tar.gz https://github.com/bats-core/bats-core/archive/refs/tags/v1.7.0.tar.gz && \
-    tar xf /tmp/bats.tar.gz && \
-    sudo mv bats-core-1.7.0 /opt/bats && \
-    sudo ln -s /opt/bats/bin/bats /usr/local/bin/bats && \
-    mkdir /tmp/bats && \
-    curl -Lo /tmp/bats/bats_helpers.bash https://raw.githubusercontent.com/dagger/dagger/main/pkg/universe.dagger.io/bats_helpers.bash && \
-    curl -Lo /tmp/bats/package.json https://raw.githubusercontent.com/dagger/dagger/main/pkg/universe.dagger.io/package.json && \
-    cd /tmp/bats && sudo /opt/node/bin/npm install
+RUN npm -g install bats
 
 RUN useradd trustacks
 RUN echo "trustacks ALL=(ALL) NOPASSWD: ALL" > /etc/sudoers.d/trustacks

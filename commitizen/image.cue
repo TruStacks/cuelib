@@ -1,4 +1,4 @@
-package eslint
+package commitizen
 
 import (
     "universe.dagger.io/docker"
@@ -6,6 +6,6 @@ import (
 
 #Image: {
     docker.#Pull & {
-        source: "quay.io/trustacks/cuelib-eslint"
+        source: "quay.io/trustacks/cuelib-commitizen"
     }
 }
