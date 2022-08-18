@@ -52,7 +52,7 @@ import (
             --docker-password=$PASSWORD \
             -o yaml \
             -n $NAMESPACE \
-        | tee /output/secret.yaml
+        | tee /output/secret.yaml > /dev/null
         echo $$ > /code
         """#
 
