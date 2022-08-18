@@ -21,19 +21,18 @@ import (
     regex: string | *".*"
 
     // Configuration exit code.
-    code: container.export.files."/code"
+    code: _container.export.files."/code"
 
-    // Encrypted file.
-    output: container.export.files."/output"
+    // Encrypted file output.
+    output: _container.export.files."/output"
 
     // Run `cz bump` and write the version file.
-    container: bash.#Run & {
+    _container: bash.#Run & {
         _image:  #Image
         input:   *_image.output | docker.#Image
         workdir: "/src"
 
         script: contents: #"""
-        set -x
         sops -e --age $KEY --encrypted-regex $ENCRYPTED_REGEX $FILE_PATH > /output
         echo $$ > /code
         """#

@@ -19,12 +19,12 @@ import (
     build: dagger.#FS
 
     // Container image.
-    image: container.output
+    image: _container.output
 
     // Container filesystem.
     output: _export.output
 
-    container: docker.#Build & {
+    _container: docker.#Build & {
         steps: [
             docker.#Pull & {
                 source: "registry.access.redhat.com/ubi8/ubi-minimal"
@@ -54,7 +54,7 @@ import (
 
     _export: core.#Export & {
         "tag":  tag
-		input:  container.output.rootfs
-        config: container.output.config
+		input:  _container.output.rootfs
+        config: _container.output.config
 	}
 }

@@ -13,19 +13,18 @@ import (
     source: dagger.#FS
 
     // Command exit code.
-    code: container.export.files."/code"
+    code: _container.export.files."/code"
 
     // Shiftleft scan report.
-    output: container.export.directories."/output"
+    output: _container.export.directories."/output"
 
     // Run the yarn install command.
-    container: bash.#Run & {
+    _container: bash.#Run & {
         _image:  #Image
         input:   *_image.output | docker.#Image
         workdir: "/src"
 
         script: contents: """
-        set -x
         scan -m ci -t nodejs,ts,credscan,depscan
         echo $$ > /code
         mkdir /output

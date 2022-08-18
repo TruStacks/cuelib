@@ -33,18 +33,17 @@ import (
     requires: [...string]
 
     // command exit code.
-	code: container.export.files."/code"
+	code: _container.export.files."/code"
 
     // Kubernetes docker registry secret.
-    output: container.export.directories."/output"
+    output: _container.export.directories."/output"
 
-    container: bash.#Run & {
+    _container: bash.#Run & {
         _image:  #Image
         input:   *_image.output | docker.#Image
         workdir: "/src"
 
         script: contents: #"""
-        set -x
         mkdir /output
         kubectl create secret docker-registry $NAME \
             --dry-run=$DRY_RUN \

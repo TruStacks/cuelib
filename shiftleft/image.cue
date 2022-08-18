@@ -5,9 +5,7 @@ import (
 )
 
 #Image: {
-    output: _image.output
-
-    _image: docker.#Pull & {
+    docker.#Pull & {
         source: "shiftleft/scan"
     }
 }

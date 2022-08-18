@@ -15,9 +15,9 @@ import (
 	project: string | *"default"
 
     // React static bundle.
-    output: container.output
+    output: _container.output
 
-    container: yarn.#Build & {
+    _container: yarn.#Build & {
         "source":  source
         "project": project
     }

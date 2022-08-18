@@ -17,4 +17,4 @@ RUN curl -s https://raw.githubusercontent.com/kubernetes-sigs/kustomize/master/h
     install ./kustomize /usr/local/bin/kustomize && \
     rm ./kustomize
 
-RUN https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3 | bash
+RUN curl https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3 | bash

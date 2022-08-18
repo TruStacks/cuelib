@@ -30,16 +30,10 @@ import (
     requires: [...string]
     
     // Export input source for execution order control.
-    output: container.export.directories."/output"
-
-    // Registry authentication
-	auth?: {
-		"username": username
-		secret:     password
-	}
+    output: _container.export.directories."/output"
     
     // Hack for requirements ordering
-    container: bash.#Run & {
+    _container: bash.#Run & {
         _image:  #Image
         "input": _image.output
         workdir: "/src"
@@ -67,8 +61,13 @@ import (
     }
 
     docker.#Push & {
-        dest:    strings.TrimSpace(container.export.files."/ref")
-        "auth":  auth
+        // Registry authentication
+        _auth?: {
+            "username": username
+            secret:     password
+        }
+        dest:    strings.TrimSpace(_container.export.files."/ref")
+        auth:  _auth
         "image": image
     }
 }

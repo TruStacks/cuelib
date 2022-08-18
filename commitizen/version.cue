@@ -14,19 +14,17 @@ import (
     source: dagger.#FS
 
     // Command return code.
-    code: container.export.files."/code"
+    code: _container.export.files."/code"
 
     // Version bumped source.
-    output: container.export.files."/version"
+    output: _container.export.files."/version"
     
-    container: bash.#Run & {
+    _container: bash.#Run & {
         _image:  #Image
         input:   *_image.output | docker.#Image
         workdir: "/src"
 
         script: contents: #"""
-        set -x
-        
         latest_tag=$(git describe --tag `git rev-list --tags --max-count=1` || true)
         if [ ! -z "$latest_tag" ]; then
             git checkout tags/$latest_tag -- CHANGELOG.md

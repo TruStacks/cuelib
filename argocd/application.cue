@@ -54,7 +54,7 @@ import (
 
     container: bash.#Run & {
         _image: #Image
-        input:  _image.output
+        input:  image | _image.output
 
         script: contents: #"""
         # copy argocd login context

@@ -15,9 +15,9 @@ import (
 	project: string | *"default"
     
     // Command return code.
-    code: container.container.export.files."/code"
+    code: _container.container.export.files."/code"
 
-    container: yarn.#Script & {
+    _container: yarn.#Script & {
         "source":   source
         "project":  project
         name:       "test"

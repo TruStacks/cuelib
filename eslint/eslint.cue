@@ -23,15 +23,14 @@ import (
     defaultConfig: _ | *{}
 
     // Command return code.
-	code: container.export.files."/code"
+	code: _container.export.files."/code"
 
-    container: bash.#Run & {
+    _container: bash.#Run & {
         _image:  #Image
         input:   *_image.output | docker.#Image
         workdir: "/src"
 
         script: contents: #"""
-        set -x
         if [ -z "$(ls -al | grep -e '\.*eslintrc.*' || true)" ]; then echo "$ESLINTRC" > .eslintrc; fi
         eslint ./src | tee /logs
         echo $$ > /code
@@ -60,13 +59,13 @@ import (
 				}
 			}
             "installOutput": {
-                contents: install.output
+                contents: _install.output
                 dest:     "/tmp/yarn_install_output"
             }
         }
     }
     
-    install: yarn.#Install & {
+    _install: yarn.#Install & {
         "source":  source
         "project": project
     }

@@ -21,10 +21,10 @@ import (
     version: string
     
     // Remote repository url.
-    output: configure.export.files."/remote"
+    output: _pushTag.export.files."/remote"
 
     // Configure remote ssh.
-    configure: bash.#Run & {
+    _pushTag: bash.#Run & {
         _image:  #Image
         input:   _image.output
         workdir: "/src"
@@ -57,5 +57,4 @@ import (
             "/code":   string
         }
     }
-
 }

@@ -22,12 +22,12 @@ import (
     privateKey: dagger.#Secret
 
     // Configuration exit code.
-	code: container.export.files."/code"
+	code: _container.export.files."/code"
     
     // The modified source.
-    output: container.export.directories."/_src"
+    output: _container.export.directories."/_src"
  
-    container: bash.#Run & {
+    _container: bash.#Run & {
         _image:  #Image
         input:   _image.output
         workdir: "/src"
@@ -36,7 +36,6 @@ import (
         # fetch the source tags
         mkdir ~/.ssh
         echo -e "$PRIVATE_KEY" > ~/.ssh/id_rsa
-        set -x
         
         chmod 600 ~/.ssh/id_rsa
         git remote set-url origin $REMOTE

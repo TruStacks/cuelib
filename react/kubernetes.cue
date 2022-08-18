@@ -27,12 +27,12 @@ import (
     requires: [...string]
     
     // Command return code.
-	code: container.export.files."/code"
+	code: _container.export.files."/code"
 
     // Tagged source.
-    output: container.export.directories."/output"
+    output: _container.export.directories."/output"
     
-    container: bash.#Run & {
+    _container: bash.#Run & {
         _image:  #Image
         "input": _image.output
         workdir: "/src"

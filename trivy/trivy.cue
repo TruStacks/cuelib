@@ -9,30 +9,29 @@ import (
 
 #Scan: {
     // The image tar.
-    image: dagger.#FS
+    source: dagger.#FS
 
     // Configuration exit code.
-    code: container.export.files."/code"
+    code: _container.export.files."/code"
 
     // Trivy scan report.
-    output: container.export.directories."/output"
+    output: _container.export.directories."/output"
 
     // Run `cz bump` and write the version file.
-    container: bash.#Run & {
+    _container: bash.#Run & {
         _image: #Image
         input:   *_image.output | docker.#Image
         workdir: "/src"
 
         script: contents: #"""
-        set -x
         mkdir /output
-        trivy image -i image.tar --format template --template "@/contrib/html.tpl" -o /output/report.html
+        trivy image -i /src/image.tar --format template --template "@/contrib/html.tpl" -o /output/report.html
         echo $$ > /code
         """#
 
         mounts: "image": {
             dest:     "/src"
-            contents: image
+            contents: source
         }
 
         export: {
