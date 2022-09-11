@@ -4,6 +4,7 @@ import (
     "strings"
 
     "dagger.io/dagger"
+    // "dagger.io/dagger/core"
 
     "universe.dagger.io/bash"
     "universe.dagger.io/docker"
@@ -21,10 +22,10 @@ import (
     ref: string
 
     // Container registry username
-    username: string
+    registryUsername: string
 
     // Container registry password.
-    password: dagger.#Secret
+    registryPassword: dagger.#Secret
 
     // Other actions required to run before this one.
     requires: [...string]
@@ -40,6 +41,7 @@ import (
         script: contents: #"""
         cp -R /src /output
         echo "$REF" > /ref
+        cat /ref
         """#
         
         env: {
@@ -62,12 +64,11 @@ import (
 
     docker.#Push & {
         // Registry authentication
-        _auth?: {
-            "username": username
-            secret:     password
+        auth: {
+            "username": registryUsername
+            secret:     registryPassword
         }
         dest:    strings.TrimSpace(_container.export.files."/ref")
-        auth:  _auth
-        "image": image
+        "image": image 
     }
 }
