@@ -23,6 +23,7 @@ import (
         _image:  #Image
         input:   *_image.output | docker.#Image
         workdir: "/src"
+        always:  true
 
         script: contents: #"""
         latest_tag=$(git describe --tag `git rev-list --tags --max-count=1` || true)
