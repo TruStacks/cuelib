@@ -25,6 +25,7 @@ import (
     container: bash.#Run & {
         _image: #Image
         input:  _image.output
+        always: true
 
         script: contents: #"""
         args="--username $USERNAME --password $PASSWORD"
