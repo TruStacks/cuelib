@@ -17,13 +17,13 @@ import (
     source: dagger.#FS
 
     // Project name, used for cache scoping
-	project: string | *"default"
+    project: string | *"default"
 
     // Use this config if an eslintrc is not present in the source.
     defaultConfig: _ | *{}
 
     // Command return code.
-	code: _container.export.files."/code"
+    code: _container.export.files."/code"
 
     _container: bash.#Run & {
         _image:  #Image
@@ -46,18 +46,18 @@ import (
                 contents: source
             }
             "yarnCache": {
-				dest:     "/cache/yarn"
-				contents: core.#CacheDir & {
-					id: "\(project)-yarn"
-				}
-			}
-			"nodeModules": {
-				dest:     "/src/node_modules"
-				type:     "cache"
-				contents: core.#CacheDir & {
-					id: "\(project)-nodejs"
-				}
-			}
+                dest:     "/cache/yarn"
+                contents: core.#CacheDir & {
+                    id: "\(project)-yarn"
+                }
+            }
+            "nodeModules": {
+                dest:     "/src/node_modules"
+                type:     "cache"
+                contents: core.#CacheDir & {
+                    id: "\(project)-nodejs"
+                }
+            }
             "installOutput": {
                 contents: _install.output
                 dest:     "/tmp/yarn_install_output"
