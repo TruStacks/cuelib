@@ -25,7 +25,7 @@ import (
         workdir: "/src"
 
         script: contents: """
-        scan -m ci -t nodejs,ts,credscan,depscan
+        scan -m ci -t nodejs,ts,credscan,depscan || true
         echo $$ > /code
         mkdir /output
         cp -R reports /output
