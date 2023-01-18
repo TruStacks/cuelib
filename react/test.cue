@@ -18,7 +18,6 @@ import (
     code: _container.container.export.files."/code"
 
     _container: yarn.#Script & {
-        always:     true
         "source":   source
         "project":  project
         name:       "test"
